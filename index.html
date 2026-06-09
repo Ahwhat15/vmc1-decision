@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="VMc1">
+<meta name="theme-color" content="#ffffff">
+<title>VMc1 Decision Tool</title>
+<style>
+:root {
+  --bg:#fff;--bg2:#f5f5f3;--bg3:#eee;
+  --text:#1a1a1a;--text2:#5f5e5a;--text3:#888;
+  --border:rgba(0,0,0,0.13);--border2:rgba(0,0,0,0.22);
+  --green:#3b6d11;--green-l:#eaf3de;
+  --amber:#854f0b;--amber-l:#faeeda;
+  --red:#a32d2d;--red-l:#fcebeb;
+  --blue:#185fa5;--blue-l:#e6f1fb;
+  --gray:#5f5e5a;--gray-l:#f1efe8;
+  --r:10px;--rs:7px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;
+    --text:#f2f2f7;--text2:#aeaeb2;--text3:#636366;
+    --border:rgba(255,255,255,0.13);--border2:rgba(255,255,255,0.24);
+    --green:#6abf3a;--green-l:#1a2e0a;
+    --amber:#f5a623;--amber-l:#2e1e05;
+    --red:#ff6b6b;--red-l:#2e0a0a;
+    --blue:#5aacff;--blue-l:#0a1e35;
+    --gray:#aeaeb2;--gray-l:#2c2c2e;
+  }
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+     background:var(--bg);color:var(--text);font-size:15px;line-height:1.5}
+.app{max-width:480px;margin:0 auto;padding:0 0 48px}
+.hdr{padding:16px 16px 0;display:flex;align-items:center;justify-content:space-between}
+.hdr-title{font-size:20px;font-weight:600;letter-spacing:-.3px}
+.hdr-sub{font-size:12px;color:var(--text3);margin-top:1px}
+.reset{font-size:13px;color:var(--blue);background:none;border:none;cursor:pointer;padding:6px 0}
+.sec{padding:14px 16px 0}
+.sec-lbl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+          color:var(--text3);margin-bottom:10px}
+.row{display:grid;gap:10px;margin-bottom:10px}
+.r2{grid-template-columns:1fr 1fr}
+.r3{grid-template-columns:1fr 1fr 1fr}
+.fld{display:flex;flex-direction:column;gap:5px}
+.flbl{font-size:12px;font-weight:500;color:var(--text2)}
+.fhint{font-size:11px;color:var(--text3);margin-top:2px;line-height:1.3}
+.num{width:100%;height:44px;border-radius:var(--rs);border:1px solid var(--border2);
+     background:var(--bg2);color:var(--text);font-size:17px;font-weight:500;
+     text-align:center;padding:0 8px;outline:none;-webkit-appearance:none}
+.num:focus{border-color:var(--blue)}
+.seg{display:flex;border-radius:var(--rs);border:1px solid var(--border2);
+     overflow:hidden;background:var(--bg2)}
+.seg button{flex:1;height:44px;border:none;background:transparent;
+            color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;
+            border-right:1px solid var(--border);transition:background .12s,color .12s}
+.seg button:last-child{border-right:none}
+.seg button.on{font-weight:600}
+.sb button.on{background:var(--green-l);color:var(--green)}
+.sr button.on{background:var(--red-l);color:var(--red)}
+.ss button.on{background:var(--gray-l);color:var(--gray)}
+.se button.on{background:var(--blue-l);color:var(--blue)}
+.sa button.on{background:var(--amber-l);color:var(--amber)}
+.div{height:1px;background:var(--border);margin:14px 0 0}
+.card{margin:12px 16px 0;border-radius:var(--r);padding:16px;
+      border:1px solid var(--border);transition:background .2s,border-color .2s}
+.sig{font-size:32px;font-weight:700;letter-spacing:-.5px;margin-bottom:4px}
+.act{font-size:14px;font-weight:600;margin-bottom:4px}
+.nte{font-size:12px;line-height:1.5;opacity:.75}
+.mets{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px 0}
+.met{background:var(--bg2);border-radius:var(--rs);padding:8px 6px;text-align:center}
+.mv{font-size:17px;font-weight:600}
+.ml{font-size:10px;color:var(--text3);margin-top:1px}
+.lyrs{border-top:1px solid var(--border);padding-top:10px;margin-top:4px}
+.lyr{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.ldot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.ltxt{font-size:12px;color:var(--text2);flex:1;line-height:1.3}
+.lval{font-size:12px;font-weight:600}
+.szrow{display:flex;align-items:center;gap:10px;
+       border-top:1px solid var(--border);padding-top:10px;margin-top:6px}
+.szlbl{font-size:12px;color:var(--text2);width:80px;flex-shrink:0}
+.sztrk{flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.szfil{height:8px;border-radius:4px;transition:width .3s}
+.sznum{font-size:15px;font-weight:700;width:44px;text-align:right}
+.vbox{background:var(--red-l);border-radius:var(--rs);padding:8px 12px;
+      margin-top:8px;font-size:12px;color:var(--red);line-height:1.5}
+.foot{text-align:center;font-size:11px;color:var(--text3);margin-top:20px;padding:0 16px}
+.tip{margin:10px 16px 0;background:var(--blue-l);border-radius:var(--r);
+     padding:11px 14px;font-size:12px;color:var(--blue);line-height:1.5}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="hdr">
+  <div>
+    <div class="hdr-title">VMc1 Decision</div>
+    <div class="hdr-sub">Markov confluence stack</div>
+  </div>
+  <button class="reset" onclick="resetAll()">Reset</button>
+</div>
+
+<div class="tip">
+  <strong>How to use:</strong> Look at your TradingView chart, fill in each field, read the signal at the bottom.
+  Signal % = Bull% minus Bear% from the matrix row of your current regime.
+  Persistence % = the diagonal value (green highlighted number) for your current regime.
+</div>
+
+<div class="sec">
+  <div class="sec-lbl">Layer 1 — Markov regime</div>
+  <div class="row r2">
+    <div class="fld">
+      <div class="flbl">Daily regime</div>
+      <div class="seg sb" id="sd">
+        <button onclick="sg('daily','Bull',this,'sb')" class="on">Bull</button>
+        <button onclick="sg('daily','Side',this,'ss')">Side</button>
+        <button onclick="sg('daily','Bear',this,'sr')">Bear</button>
+      </div>
+    </div>
+    <div class="fld">
+      <div class="flbl">4H regime</div>
+      <div class="seg sb" id="s4">
+        <button onclick="sg('tf4h','Bull',this,'sb')" class="on">Bull</button>
+        <button onclick="sg('tf4h','Side',this,'ss')">Side</button>
+        <button onclick="sg('tf4h','Bear',this,'sr')">Bear</button>
+      </div>
+    </div>
+  </div>
+  <div class="row r2">
+    <div class="fld">
+      <div class="flbl">Markov signal %</div>
+      <input class="num" type="number" id="isig" value="45" min="-100" max="100" step="1" inputmode="decimal" oninput="calc()">
+      <div class="fhint">Bull% minus Bear% — use current regime's matrix row</div>
+    </div>
+    <div class="fld">
+      <div class="flbl">Persistence %</div>
+      <input class="num" type="number" id="iper" value="71" min="0" max="100" step="1" inputmode="decimal" oninput="calc()">
+      <div class="fhint">Green diagonal value for current regime (TV matrix)</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="fld">
+      <div class="flbl">Parabolic alert</div>
+      <div class="seg ss" id="spa">
+        <button onclick="sg('para','None',this,'ss')" class="on">None</button>
+        <button onclick="sg('para','Low',this,'sa')">Low (40-69)</button>
+        <button onclick="sg('para','High',this,'sb')">High (70+)</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="div"></div>
+
+<div class="sec">
+  <div class="sec-lbl">Layer 2 — Trend</div>
+  <div class="row r2">
+    <div class="fld">
+      <div class="flbl">ADX</div>
+      <input class="num" type="number" id="iadx" value="28" min="0" max="80" step="1" inputmode="decimal" oninput="calc()">
+      <div class="fhint">&lt;20 weak · 20-25 forming · &gt;25 confirmed</div>
+    </div>
+    <div class="fld">
+      <div class="flbl">EMA 20 slope</div>
+      <div class="seg se" id="sema">
+        <button onclick="sg('ema','Rising',this,'se')" class="on">Rising</button>
+        <button onclick="sg('ema','Flat',this,'ss')">Flat</button>
+        <button onclick="sg('ema','Decl',this,'sr')">Decl</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="div"></div>
+
+<div class="sec">
+  <div class="sec-lbl">Layer 3 — VIX</div>
+  <div class="row r2">
+    <div class="fld">
+      <div class="flbl">VIX level</div>
+      <input class="num" type="number" id="ivix" value="16" min="0" max="80" step="0.1" inputmode="decimal" oninput="calc()">
+      <div class="fhint">Read from VIX daily chart — same value for all tickers today</div>
+    </div>
+    <div class="fld">
+      <div class="flbl">VIX trend</div>
+      <div class="seg se" id="svt">
+        <button onclick="sg('vixtrend','Falling',this,'se')" class="on">Falling</button>
+        <button onclick="sg('vixtrend','Stable',this,'ss')">Stable</button>
+        <button onclick="sg('vixtrend','Spiking',this,'sr')">Spiking</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="div" style="margin-top:6px"></div>
+
+<div id="result"></div>
+
+<div class="foot">VMc1 Investments · Markov Confluence Stack v1.0<br>
+Bookmark this page in Safari → Share → Add to Home Screen</div>
+
+</div>
+<script>
+const S={daily:'Bull',tf4h:'Bull',signal:45,persist:71,para:'None',adx:28,ema:'Rising',vix:16,vixtrend:'Falling'}
+try{Object.assign(S,JSON.parse(localStorage.getItem('v1s')||'{}'))}catch(e){}
+
+function save(){try{localStorage.setItem('v1s',JSON.stringify(S))}catch(e){}}
+
+function sg(key,val,btn,cls){
+  S[key]=val;save()
+  const seg=btn.parentElement
+  seg.querySelectorAll('button').forEach(b=>b.classList.remove('on'))
+  btn.classList.add('on')
+  seg.className='seg '+cls
+  calc()
+}
+
+function n(id){return parseFloat(document.getElementById(id).value)||0}
+
+function calc(){
+  S.signal=n('isig');S.persist=n('iper');S.adx=n('iadx');S.vix=n('ivix');save()
+
+  const sig=S.signal/100,per=S.persist,adx=S.adx,vix=S.vix
+  const daily=S.daily,h4=S.tf4h,ema=S.ema,para=S.para,vt=S.vixtrend
+
+  // L1
+  const l1v=sig<-0.20,l1x=sig<-0.50
+  const mc=sig>=0.60?100:sig>=0.20?65:sig>=0?30:0
+  const pa=per>=80?1:per>=65?0.8:0.6
+  const ma=mc*pa
+
+  // L2
+  const am=adx>=30?1:adx>=25?0.85:adx>=20?0.65:0.4
+  const em=ema==='Rising'?1:ema==='Flat'?0.8:0.4
+  const l2s=am*em
+  const l2v=ema==='Decl'&&adx<15
+
+  // L3
+  let vt2=vix<15?0:vix<20?1:vix<25?2:vix<30?3:vix<40?4:5
+  if(vt==='Spiking')vt2=Math.min(5,vt2+1)
+  if(vt==='Falling')vt2=Math.max(0,vt2-1)
+  const vms=[0.9,1,0.75,0.5,0.25,0],vls=['Complacent','Normal','Elevated','High Fear','Crisis','Extreme']
+  const vm=vms[vt2],l3v=vt2>=5
+
+  const hv=l1v||l2v||l3v
+  const fc=hv?0:Math.min(100,ma*l2s*vm)
+  const pm=para==='High'?1.5:para==='Low'?1.2:1
+  const ac=hv?0:Math.min(100,fc*pm)
+
+  let sig2='FLAT',sbg='var(--gray-l)',sfg='var(--gray)',act='',nte='',vrs=[]
+  if(l1x)vrs.push('Markov signal < -50% — exit all longs immediately')
+  else if(l1v)vrs.push('Markov signal < -20% — L1 veto active')
+  if(l2v)vrs.push('EMA declining + ADX < 15 — L2 veto active')
+  if(l3v)vrs.push('VIX extreme crisis — L3 veto active')
+
+  if(hv){sig2='VETO';sbg='var(--red-l)';sfg='var(--red)';act='No new longs. Review existing positions.';nte=vrs[0]}
+  else if(daily==='Bear'&&h4==='Bull'){sig2='TRAP';sbg='#fff3ed';sfg='#993c1d';act='Dead cat bounce. No long — Daily Bear overrides 4H Bull.';nte='Wait for Daily to flip Sideways before any long consideration.'}
+  else if(daily==='Bear'){sig2='BEAR';sbg='var(--red-l)';sfg='var(--red)';act='Flat or short only. Exit all longs.';nte='Daily Bear with '+Math.round(per)+'% persistence. No longs.'}
+  else if(daily==='Side'&&h4==='Side'){sig2='FLAT';sbg='var(--gray-l)';sfg='var(--gray)';act='No new positions. Both timeframes Sideways.';nte='Side-Side persistence '+Math.round(per)+'%. Wait for Daily to resolve.'}
+  else if(daily==='Side'){sig2='WAIT';sbg='var(--amber-l)';sfg='var(--amber)';act='Not yet actionable. Watch for Daily to confirm Bull.';nte='Daily Sideways = no clear trend. Wait for green ribbon on Daily.'}
+  else if(daily==='Bull'&&h4==='Bear'){sig2='REDUCE';sbg='var(--amber-l)';sfg='var(--amber)';act='If in position: cut to 50%, tighten stop.';nte='Daily trend intact. 4H Bear is a normal pullback. Re-add if 4H re-flips Bull.'}
+  else if(daily==='Bull'&&h4==='Side'){sig2='WAIT';sbg='var(--amber-l)';sfg='var(--amber)';act='Pullback forming. Wait for 4H to re-flip Bull.';nte='Best entries come from 4H dip-and-recover. Daily trend intact.'}
+  else if(daily==='Bull'&&h4==='Bull'){
+    if(sig<0.20&&para!=='High'){sig2='WATCH';sbg='var(--gray-l)';sfg='var(--gray)';act='Signal too weak. Monitor for strengthening.';nte='Markov signal below 20% — wait for signal to build or parabolic to fire.'}
+    else if(sig<0.20&&para==='High'){sig2='CAUTION';sbg='var(--amber-l)';sfg='var(--amber)';act='Small position only — parabolic overrides weak Markov.';nte='Signal weak but high conviction parabolic. Size 15-20% max. Tight stop.'}
+    else if(ac>=70){sig2='BUY';sbg='var(--green-l)';sfg='var(--green)';act='Enter at '+Math.round(ac)+'% of base size.';nte=per>=70?'High conviction — all layers aligned.':'Good setup. Build in tranches as persistence confirms.'}
+    else if(ac>=25){sig2='BUY';sbg='var(--green-l)';sfg='var(--green)';act='Enter at '+Math.round(ac)+'% of base size.';nte='Moderate conviction. Some layers weak — build slowly.'}
+    else{sig2='WATCH';sbg='var(--gray-l)';sfg='var(--gray)';act='Ceiling too low ('+Math.round(ac)+'%) to act.';nte='Direction right but combined ceiling is very small. Wait for ADX or persistence to improve.'}
+  }
+
+  const sc=ac>=70?'var(--green)':ac>=30?'var(--amber)':'var(--red)'
+  const sb2=ac>=70?'#3b6d11':ac>=30?'#854f0b':'#a32d2d'
+  const l1c=l1v?'var(--red)':ma>=65?'var(--green)':ma>=30?'var(--amber)':'var(--gray)'
+  const l2c=l2v?'var(--red)':l2s>=0.8?'var(--green)':l2s>=0.5?'var(--amber)':'var(--gray)'
+  const l3c=l3v?'var(--red)':vm>=0.9?'var(--green)':vm>=0.6?'var(--amber)':'var(--red)'
+  const pc=para==='High'?'var(--green)':para==='Low'?'var(--amber)':'var(--gray)'
+
+  document.getElementById('result').innerHTML=`
+<div class="card" style="background:${sbg};border-color:${sfg}30">
+  <div class="sig" style="color:${sfg}">${sig2}</div>
+  <div class="act" style="color:${sfg}">${act}</div>
+  <div class="nte" style="color:${sfg}">${nte}</div>
+  <div class="mets">
+    <div class="met"><div class="mv" style="color:${sc}">${Math.round(ac)}%</div><div class="ml">Ceiling</div></div>
+    <div class="met"><div class="mv" style="color:${per>=65?'var(--green)':per>=50?'var(--amber)':'var(--red)'}">${Math.round(per)}%</div><div class="ml">Persist</div></div>
+    <div class="met"><div class="mv" style="color:${adx>=25?'var(--green)':adx>=20?'var(--amber)':'var(--red)'}">${Math.round(adx)}</div><div class="ml">ADX</div></div>
+    <div class="met"><div class="mv" style="color:${vt2<=1?'var(--green)':vt2<=2?'var(--amber)':'var(--red)'}">${vix.toFixed(1)}</div><div class="ml">VIX</div></div>
+  </div>
+  <div class="lyrs">
+    <div class="lyr"><div class="ldot" style="background:${l1c}"></div><div class="ltxt">L1 Markov: signal ${Math.round(sig*100)}% → ceil ${Math.round(mc)}% × persist ${Math.round(pa*100)}%</div><div class="lval" style="color:${l1c}">${Math.round(ma)}%</div></div>
+    <div class="lyr"><div class="ldot" style="background:${l2c}"></div><div class="ltxt">L2 Trend: ADX ${Math.round(adx)} (${Math.round(am*100)}%) × EMA ${ema} (${Math.round(em*100)}%)</div><div class="lval" style="color:${l2c}">${Math.round(l2s*100)}%×</div></div>
+    <div class="lyr"><div class="ldot" style="background:${l3c}"></div><div class="ltxt">L3 VIX: ${vix.toFixed(1)} — ${vls[vt2]}</div><div class="lval" style="color:${l3c}">${Math.round(vm*100)}%×</div></div>
+    <div class="lyr"><div class="ldot" style="background:${pc}"></div><div class="ltxt">Parabolic: ${para==='None'?'no alert':para+' conviction ('+Math.round(pm*100)+'% of ceil)'}</div><div class="lval" style="color:${pc}">${para==='None'?'—':'+'+Math.round((pm-1)*100)+'%'}</div></div>
+  </div>
+  <div class="szrow">
+    <span class="szlbl">Final ceiling</span>
+    <div class="sztrk"><div class="szfil" style="width:${Math.round(ac)}%;background:${sb2}"></div></div>
+    <span class="sznum" style="color:${sc}">${Math.round(ac)}%</span>
+  </div>
+  ${vrs.length?`<div class="vbox">${vrs.join('<br>')}</div>`:''}
+</div>`
+}
+
+function resetAll(){
+  Object.assign(S,{daily:'Bull',tf4h:'Bull',signal:45,persist:71,para:'None',adx:28,ema:'Rising',vix:16,vixtrend:'Falling'})
+  document.getElementById('isig').value=45
+  document.getElementById('iper').value=71
+  document.getElementById('iadx').value=28
+  document.getElementById('ivix').value=16
+  ;[['sd','Bull','sb'],['s4','Bull','sb'],['spa','None','ss'],['sema','Rising','se'],['svt','Falling','se']].forEach(([id,val,cls])=>{
+    const seg=document.getElementById(id)
+    seg.querySelectorAll('button').forEach(b=>{
+      if(b.textContent.trim()===val||b.textContent.startsWith(val)){b.classList.add('on');seg.className='seg '+cls}
+      else b.classList.remove('on')
+    })
+  })
+  save();calc()
+}
+
+// Restore saved seg states on load
+;[['sd','daily','sb','sr','ss'],['s4','tf4h','sb','sr','ss'],['spa','para','sb','sa','ss'],['sema','ema','se','sr','ss'],['svt','vixtrend','se','sr','ss']].forEach(([id,key])=>{
+  const seg=document.getElementById(id),val=S[key]
+  seg.querySelectorAll('button').forEach(b=>{
+    if(b.textContent.trim()===val||b.textContent.startsWith(val))b.click()
+  })
+})
+document.getElementById('isig').value=S.signal
+document.getElementById('iper').value=S.persist
+document.getElementById('iadx').value=S.adx
+document.getElementById('ivix').value=S.vix
+calc()
+</script>
+</body>
+</html>

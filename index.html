@@ -139,7 +139,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     <div class="fld">
       <div class="flbl">Persistence %</div>
       <input class="num" type="number" id="iper" value="71" min="0" max="100" step="1" inputmode="decimal" oninput="calc()">
-      <div class="fhint">Green diagonal value for current regime (TV matrix)</div>
+      <div class="fhint">Stride-sampled diagonal (typical range 24–51%)</div>
     </div>
   </div>
   <div class="row">
@@ -200,12 +200,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 
 <div id="result"></div>
 
-<div class="foot">VMc1 Investments · Markov Confluence Stack v1.0<br>
+<div class="foot">VMc1 Investments · Markov Confluence Stack v1.1 (stride-calibrated)<br>
 Bookmark this page in Safari → Share → Add to Home Screen</div>
 
 </div>
 <script>
-const S={daily:'Bull',tf4h:'Bull',signal:45,persist:71,para:'None',adx:28,ema:'Rising',vix:16,vixtrend:'Falling'}
+const S={daily:'Bull',tf4h:'Bull',signal:45,persist:43,para:'None',adx:28,ema:'Rising',vix:16,vixtrend:'Falling'}
 try{Object.assign(S,JSON.parse(localStorage.getItem('v1s')||'{}'))}catch(e){}
 
 function save(){try{localStorage.setItem('v1s',JSON.stringify(S))}catch(e){}}
@@ -230,7 +230,7 @@ function calc(){
   // L1
   const l1v=sig<-0.20,l1x=sig<-0.50
   const mc=sig>=0.60?100:sig>=0.20?65:sig>=0?30:0
-  const pa=per>=80?1:per>=65?0.8:0.6
+  const pa=per>=47?1:per>=35?0.9:0.75  // stride-sampled calibration: Bull 0.43-0.51, Bear 0.24-0.47
   const ma=mc*pa
 
   // L2
@@ -267,14 +267,14 @@ function calc(){
   else if(daily==='Bull'&&h4==='Bull'){
     if(sig<0.20&&para!=='High'){sig2='WATCH';sbg='var(--gray-l)';sfg='var(--gray)';act='Signal too weak. Monitor for strengthening.';nte='Markov signal below 20% — wait for signal to build or parabolic to fire.'}
     else if(sig<0.20&&para==='High'){sig2='CAUTION';sbg='var(--amber-l)';sfg='var(--amber)';act='Small position only — parabolic overrides weak Markov.';nte='Signal weak but high conviction parabolic. Size 15-20% max. Tight stop.'}
-    else if(ac>=70){sig2='BUY';sbg='var(--green-l)';sfg='var(--green)';act='Enter at '+Math.round(ac)+'% of base size.';nte=per>=70?'High conviction — all layers aligned.':'Good setup. Build in tranches as persistence confirms.'}
+    else if(ac>=70){sig2='BUY';sbg='var(--green-l)';sfg='var(--green)';act='Enter at '+Math.round(ac)+'% of base size.';nte=per>=47?'High conviction — all layers aligned.':'Good setup. Build in tranches as persistence confirms.'}
     else if(ac>=25){sig2='BUY';sbg='var(--green-l)';sfg='var(--green)';act='Enter at '+Math.round(ac)+'% of base size.';nte='Moderate conviction. Some layers weak — build slowly.'}
     else{sig2='WATCH';sbg='var(--gray-l)';sfg='var(--gray)';act='Ceiling too low ('+Math.round(ac)+'%) to act.';nte='Direction right but combined ceiling is very small. Wait for ADX or persistence to improve.'}
   }
 
   const sc=ac>=70?'var(--green)':ac>=30?'var(--amber)':'var(--red)'
   const sb2=ac>=70?'#3b6d11':ac>=30?'#854f0b':'#a32d2d'
-  const l1c=l1v?'var(--red)':ma>=65?'var(--green)':ma>=30?'var(--amber)':'var(--gray)'
+  const l1c=l1v?'var(--red)':ma>=47?'var(--green)':ma>=25?'var(--amber)':'var(--gray)'
   const l2c=l2v?'var(--red)':l2s>=0.8?'var(--green)':l2s>=0.5?'var(--amber)':'var(--gray)'
   const l3c=l3v?'var(--red)':vm>=0.9?'var(--green)':vm>=0.6?'var(--amber)':'var(--red)'
   const pc=para==='High'?'var(--green)':para==='Low'?'var(--amber)':'var(--gray)'
@@ -286,7 +286,7 @@ function calc(){
   <div class="nte" style="color:${sfg}">${nte}</div>
   <div class="mets">
     <div class="met"><div class="mv" style="color:${sc}">${Math.round(ac)}%</div><div class="ml">Ceiling</div></div>
-    <div class="met"><div class="mv" style="color:${per>=65?'var(--green)':per>=50?'var(--amber)':'var(--red)'}">${Math.round(per)}%</div><div class="ml">Persist</div></div>
+    <div class="met"><div class="mv" style="color:${per>=47?'var(--green)':per>=35?'var(--amber)':'var(--red)'}">${Math.round(per)}%</div><div class="ml">Persist</div></div>
     <div class="met"><div class="mv" style="color:${adx>=25?'var(--green)':adx>=20?'var(--amber)':'var(--red)'}">${Math.round(adx)}</div><div class="ml">ADX</div></div>
     <div class="met"><div class="mv" style="color:${vt2<=1?'var(--green)':vt2<=2?'var(--amber)':'var(--red)'}">${vix.toFixed(1)}</div><div class="ml">VIX</div></div>
   </div>
@@ -306,9 +306,9 @@ function calc(){
 }
 
 function resetAll(){
-  Object.assign(S,{daily:'Bull',tf4h:'Bull',signal:45,persist:71,para:'None',adx:28,ema:'Rising',vix:16,vixtrend:'Falling'})
+  Object.assign(S,{daily:'Bull',tf4h:'Bull',signal:45,persist:43,para:'None',adx:28,ema:'Rising',vix:16,vixtrend:'Falling'})
   document.getElementById('isig').value=45
-  document.getElementById('iper').value=71
+  document.getElementById('iper').value=43
   document.getElementById('iadx').value=28
   document.getElementById('ivix').value=16
   ;[['sd','Bull','sb'],['s4','Bull','sb'],['spa','None','ss'],['sema','Rising','se'],['svt','Falling','se']].forEach(([id,val,cls])=>{

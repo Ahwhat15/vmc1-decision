@@ -291,7 +291,7 @@ function calc(){
     <div class="met"><div class="mv" style="color:${vt2<=1?'var(--green)':vt2<=2?'var(--amber)':'var(--red)'}">${vix.toFixed(1)}</div><div class="ml">VIX</div></div>
   </div>
   <div class="lyrs">
-    <div class="lyr"><div class="ldot" style="background:${l1c}"></div><div class="ltxt">L1 Markov: signal ${Math.round(sig*100)}% → ceil ${Math.round(mc)}% × persist ${Math.round(pa*100)}%</div><div class="lval" style="color:${l1c}">${Math.round(ma)}%</div></div>
+    <div class="lyr"><div class="ldot" style="background:${l1c}"></div><div class="ltxt">L1 Markov: signal ${Math.round(sig*100)}% → ceil ${Math.round(mc)}% × persist ${Math.round(per)}% (mult ${Math.round(pa*100)}%)</div><div class="lval" style="color:${l1c}">${Math.round(ma)}%</div></div>
     <div class="lyr"><div class="ldot" style="background:${l2c}"></div><div class="ltxt">L2 Trend: ADX ${Math.round(adx)} (${Math.round(am*100)}%) × EMA ${ema} (${Math.round(em*100)}%)</div><div class="lval" style="color:${l2c}">${Math.round(l2s*100)}%×</div></div>
     <div class="lyr"><div class="ldot" style="background:${l3c}"></div><div class="ltxt">L3 VIX: ${vix.toFixed(1)} — ${vls[vt2]}</div><div class="lval" style="color:${l3c}">${Math.round(vm*100)}%×</div></div>
     <div class="lyr"><div class="ldot" style="background:${pc}"></div><div class="ltxt">Parabolic: ${para==='None'?'no alert':para+' conviction ('+Math.round(pm*100)+'% of ceil)'}</div><div class="lval" style="color:${pc}">${para==='None'?'—':'+'+Math.round((pm-1)*100)+'%'}</div></div>
